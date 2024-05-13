@@ -51,6 +51,7 @@ public class Utilities {
      * @param max The maximum range number to check against (inclusive)
      * @return Returns true if the numberToCheck is between min and max (both inclusive), false otherwise.
      */
+
     public static boolean validRange(int numberToCheck, int min, int max) {
         return ((numberToCheck >= min) && (numberToCheck <= max));
     }
@@ -58,6 +59,20 @@ public class Utilities {
     public static boolean validRange(float numbertoCheck, float min, float max, float delta) {
         return ((numbertoCheck >= (min-delta)) && (numbertoCheck <= (max+delta)));
 
+    }
+
+    /**
+     * This method returns true if the numberToCheck is above min
+     *
+     * @param numberToCheck The number whose range is being checked.
+     * @return Returns true if the numberToCheck is above min (inclusive), false otherwise.
+     */
+    public static boolean minValue(int numberToCheck,int min) {
+        return ((numberToCheck >= min));
+    }
+
+    public static boolean minValue(double numberToCheck,double min) {
+        return ((numberToCheck >= min));
     }
 
     public static String truncateString(String stringToTruncate, int length){

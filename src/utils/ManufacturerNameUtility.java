@@ -13,7 +13,7 @@ public class ManufacturerNameUtility {
     }};
 
 
-    public static boolean isValidManuName(String name) {
+    public static boolean isValidMenuName(String name) {
         //must not be case sensitive
         for (String manuName:manufacturerNames){
             if (manuName.equalsIgnoreCase(name)) {
