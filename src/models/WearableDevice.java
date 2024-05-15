@@ -3,6 +3,9 @@ package models;
 import utils.ManufacturerNameUtility;
 import utils.Utilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A Wearable Device abstract Class
  *
@@ -46,6 +49,9 @@ public abstract class WearableDevice {
         ;
         this.id = Utilities.truncateString(id, 10);
     }
+
+    // set up array to iterate?? extra credit
+//    private List<String> getFields = new ArrayList<>();
 
     public abstract double getInsurancePremium();
 

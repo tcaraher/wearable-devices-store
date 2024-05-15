@@ -27,6 +27,11 @@ public class SmartBand extends WearableDevice {
         this.heartRateMonitor = heartRateMonitor;
     }
 
+    public boolean getHeartRateMonitor () {
+        return heartRateMonitor;
+    }
+
+
     @Override
     public double getInsurancePremium() {
         return super.getPrice() * 0.7;

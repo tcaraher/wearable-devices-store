@@ -56,6 +56,19 @@ public class WearableDeviceAPI implements ISerializer {
         return null;
     }
 
+    // todo double check this but should be fine
+    public WearableDevice getWearableDeviceByID(String id) {
+        if (isValidId(id)) {
+            for (WearableDevice objToGetByID : wearableList) {
+                if (objToGetByID.getId().contains(id)) {
+                    return objToGetByID;
+                }
+            }
+        }
+        return null;
+    }
+
+
     public String listAllWearableDevices() {
         String str = "";
 
@@ -104,6 +117,7 @@ public class WearableDeviceAPI implements ISerializer {
 
 
     // TODO update this java doc
+
     /**
      * This method builds and returns a String containing all the products in the ArrayList
      * that are more expensive that a specific amount (passed as a parameter).
@@ -143,6 +157,9 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    //Get Technology methods
+
+
     public int numberOfWearableDevices() {
         return wearableList.size();
     }
@@ -169,16 +186,58 @@ public class WearableDeviceAPI implements ISerializer {
 
     public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
         int number = 0;
-        for (WearableDevice wearableDevice:wearableList) {
-            if (wearableDevice.getManufacturerName().equals(manufacturer)){
-                number ++;
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice.getManufacturerName().equals(manufacturer)) {
+                number++;
             }
         }
         return number;
     }
 
+    // Update methods
 
-    //TODO get Technology methods
+    public boolean updateSmartWatch(String id, SmartWatch detailsToUpdate) {
+        //find the object by the index number
+        WearableDevice getDevice = getWearableDeviceByID(id);
+        //if the object exists, and it has found it, use the object passed in the parameters to
+        //update the found object in the ArrayList.
+        // todo check that i actually need this validation
+        if (getDevice == null) {
+            return false;
+        } else if (getDevice instanceof SmartWatch) {
+            getDevice.setSize(detailsToUpdate.getSize());
+            getDevice.setPrice(detailsToUpdate.getPrice());
+            getDevice.setManufacturerName(detailsToUpdate.getManufacturerName());
+            getDevice.setMaterial(detailsToUpdate.getMaterial());
+            getDevice.setModelName(detailsToUpdate.getModelName());
+            ((SmartWatch) getDevice).setDisplayType(detailsToUpdate.getDisplayType());
+            return true;
+        }
+        //if the object was not found, return false, indicating that the update was not successful
+        return false;
+    }
+
+    public boolean updateSmartBand(String id, SmartBand detailsToUpdate) {
+        //find the object by the index number
+        WearableDevice getDevice = getWearableDeviceByID(id);
+        //if the object exists, and it has found it, use the object passed in the parameters to
+        //update the found object in the ArrayList.
+        // todo check that i actually need this validation
+        if (getDevice == null) {
+            return false;
+        } else if (getDevice instanceof SmartBand) {
+            getDevice.setSize(detailsToUpdate.getSize());
+            getDevice.setPrice(detailsToUpdate.getPrice());
+            getDevice.setManufacturerName(detailsToUpdate.getManufacturerName());
+            getDevice.setMaterial(detailsToUpdate.getMaterial());
+            getDevice.setModelName(detailsToUpdate.getModelName());
+            ((SmartBand) getDevice).setHeartRateMonitor(detailsToUpdate.getHeartRateMonitor());
+            return true;
+        }
+        //if the object was not found, return false, indicating that the update was not successful
+        return false;
+    }
+
 
     //TODO - delete methods
 
@@ -248,7 +307,68 @@ public class WearableDeviceAPI implements ISerializer {
 
     //TODO - sort methods
 
+    public void sortByPriceDescending() {
+        return;
+    }
+
+    public void sortByPriceAscending() {
+        return;
+    }
+
+    // todo check this warning
+    private void swapWearableDevice(List wearableList, int i, int j) {
+        return;
+    }
+
+
     //TODO Top 5 methods
+
+    // Search Methods
+
+    /**
+     * This method returns a string containing all devices whose device paramater passed in contained (regardless of case)
+     * the search string.  The index location of the device in the arraylist is also returned. This saves having a method for each
+     * string paramater of Wearable Device to run a search on.
+     *
+     * @param paramToSearch The string to search by
+     * @return products whose product name contains the search string
+     */
+
+//   Curious attempt to make below code DRY
+//    private String simplifyDeviceAndSearchString(WearableDevice deviceString ,String searchQuery) {
+//        return deviceString.toUpperCase().contains(searchQuery.toUpperCase());
+//    }
+
+
+    // Might need to make these separate functions.
+    public String searchByDeviceParam(String paramToSearch, String searchQuery) {
+        boolean queryToCheck = false;
+        String matchingDevices = "";
+
+        for (WearableDevice device : wearableList) {
+            switch (paramToSearch) {
+                case "size":
+                    queryToCheck = device.getSize().toUpperCase().contains(searchQuery.toUpperCase());
+                case "manufacturer name":
+                    queryToCheck = device.getManufacturerName().toUpperCase().contains(searchQuery.toUpperCase());
+                case "material":
+                    queryToCheck = device.getMaterial().toUpperCase().contains(searchQuery.toUpperCase());
+                case "id":
+                    queryToCheck = device.getId().toUpperCase().contains(searchQuery.toUpperCase());
+                case "model name":
+                    queryToCheck = device.getModelName().toUpperCase().contains(searchQuery.toUpperCase());
+            }
+            if (queryToCheck) {
+                matchingDevices += wearableList.indexOf(device) + ": " + device + "\n";
+            }
+        }
+
+        if (matchingDevices.isEmpty()) {
+            return "No devices match your search";
+        } else {
+            return matchingDevices;
+        }
+    }
 
 
     // TODO Persistence methods

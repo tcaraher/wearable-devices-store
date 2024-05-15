@@ -15,6 +15,7 @@ public class SmartWatch extends WearableDevice {
      * @param material         Material of the wearable. It should be less than 20 chars, no default.
      * @param modelName        Model name. Max of 30 char
      * @param id               Wearable id, unique in the system.
+     * @param displayType
      */
     public SmartWatch(String size, double price, String manufacturerName, String material, String modelName, String id, String displayType) {
         super(size, price, manufacturerName, material, modelName, id);

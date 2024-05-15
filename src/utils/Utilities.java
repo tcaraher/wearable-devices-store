@@ -1,5 +1,7 @@
 package utils;
 
+import models.WearableDevice;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,4 +99,6 @@ public class Utilities {
     public static boolean isValidIndex(List list, int indexToCheck){
         return ((indexToCheck >= 0) && (indexToCheck < list.size()));
     }
+
+
 }
