@@ -9,7 +9,7 @@ import models.WearableDevice;
 import utils.ScannerInput;
 import utils.Utilities;
 
-
+//todo check the no new line thing on the toStrings
 public class Driver {
 
 
@@ -53,7 +53,7 @@ public class Driver {
                 case 1 -> runWearableDeviceCrudMenu();
                 case 2 -> runReportsMenuLevel1();
                 case 4 -> searchWearableDevices();
-//                case 5 -> sortWearableDevices();
+                case 5 -> sortWearableDevices();
                 case 10 -> saveDevices();
                 case 11 -> loadDevices();
                 default -> System.out.println("Invalid option entered: " + option);
@@ -208,7 +208,7 @@ public class Driver {
                     //gather the new data from the user and update the selected object.
                     listAllWearableDevices();
                     if (wearableAPI.numberOfWearableDevices() > 0) {
-                        int deviceIndexToUpdate = ScannerInput.readNextInt("Enter the index of the device to update ==> ");
+                        int deviceIndexToUpdate = ScannerInput.readNextInt("Enter the index of the device to update: ");
                         if (wearableAPI.isValidIndex(deviceIndexToUpdate)) {
                             String size = ScannerInput.readNextLine("Enter the size of the wearable: ");
                             double price = ScannerInput.readNextDouble("Enter the price: ");
@@ -334,8 +334,31 @@ public class Driver {
         System.out.println(wearableAPI.topFiveMostExpensiveWearableDevices());
     }
     public void listAllDevicesOfManufacturer(){
+        String manufacturerToSearch = "";
+
+        int option = ScannerInput.readNextInt("""
+                    --------------------------------
+                    | Please Select a manufacturer: |
+                    |   1) APPLE                    |
+                    |   2) SAMSUNG                  |
+                    |   3) Garmin                   |
+                    |   4) FitBit                   |
+                    |   5) Whoop                    |
+                    |   0) Go Back                  |
+                    ---------------------------
+                    ==>> """);
+
+        switch (option) {
+            case 1: manufacturerToSearch = "APPLE";
+            case 2: manufacturerToSearch = "SAMSUNG";
+            case 3: manufacturerToSearch = "Garmin";
+            case 4: manufacturerToSearch = "FitBit";
+            case 5: manufacturerToSearch = "Whoop";
+            case 0: runReportsMenuLevel1();
+        }
+
         System.out.println("List of all devices of chosen manufacturer: ");
-//        System.out.println(wearableAPI.());
+        System.out.println(wearableAPI.listAllWearableDevicesByChosenManufacturer(manufacturerToSearch));
     }
 
 //TODO - write all the methods that are called from your menu
@@ -362,20 +385,57 @@ public class Driver {
 
         switch (option) {
             case 1: paramToSearch = "id";
+            break;
             case 2: paramToSearch = "material";
+            break;
             case 3: paramToSearch = "manufacturer name";
+            break;
             case 4: paramToSearch = "model name";
+            break;
             case 5: paramToSearch = "display type";
+            break;
             case 0: runMainMenu();
         }
 
-        String searchQuery = ScannerInput.readNextLine("Enter the " + paramToSearch + "you would like to search for: ");
+        String searchQuery = ScannerInput.readNextLine("Enter the " + paramToSearch + " you would like to search for: ");
+        System.out.println("Here are all of the " + paramToSearch + " devices:");;
         System.out.println(wearableAPI.searchByDeviceParam(paramToSearch,searchQuery));;
     }
 
 // TODO sort  (and give a list of options - not a recurring menu thou)
 
+    public void sortWearableDevices() {
+        String searchSelection = "";
 
+        int option = ScannerInput.readNextInt("""
+                    ----------------------------------
+                    | Sort all wearable devices by:  |
+                    |   1) Price Ascending           |
+                    |   2) Price Descending          |
+                    |   3) Model Name Alphabetically |
+                    |   0) Main Menu                 |
+                    ---------------------------------
+                    ==>> """);
+
+        switch (option) {
+            case 1:
+                searchSelection = "price ascending";
+                wearableAPI.sortByPriceAscending();
+                break;
+            case 2:
+                searchSelection = "price descending";
+                wearableAPI.sortByPriceDescending();
+                break;
+            case 3:
+                searchSelection = "model name alphabetically";
+                wearableAPI.sortProductsByModelNameAscending();
+                break;
+            case 0: runMainMenu();
+        }
+        System.out.println("Here is your sorted list by " + ": ");
+        listAllWearableDevices();
+
+    }
 
 
 

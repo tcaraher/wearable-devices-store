@@ -47,6 +47,7 @@ public abstract class WearableDevice {
         this.material = Utilities.truncateString(material, 20);
         this.modelName = Utilities.truncateString(modelName, 30);
         ;
+        // todo this also supossed to be within valid range?
         this.id = Utilities.truncateString(id, 10);
     }
 

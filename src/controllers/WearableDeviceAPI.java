@@ -7,6 +7,7 @@ import models.SmartBand;
 import models.SmartWatch;
 import models.WearableDevice;
 import utils.ISerializer;
+import utils.ManufacturerNameUtility;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -115,6 +116,19 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    public String listAllWearableDevicesByChosenManufacturer(String chosenManufacturer) {
+        if (ManufacturerNameUtility.isValidMenuName(chosenManufacturer)) {
+            String str = "";
+            for (WearableDevice wearableDevice : wearableList) {
+                if (wearableDevice.getManufacturerName().contains(chosenManufacturer)) {
+                    str += wearableList.indexOf(wearableDevice) + ":" + wearableDevice.toString() + "\n";
+                }
+            }
+            return str;
+        } else return null;
+    }
+
+
 
     // TODO update this java doc
 
@@ -157,9 +171,7 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
-    public String listAllWearableDevicesByChosenManufacturer() {
-        return "";
-    }
+
 
     //Get Technology methods
 
@@ -189,13 +201,15 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
     public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
-        int number = 0;
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice.getManufacturerName().equals(manufacturer)) {
-                number++;
+        if (ManufacturerNameUtility.isValidMenuName(manufacturer)) {
+            int number = 0;
+            for (WearableDevice wearableDevice : wearableList) {
+                if (wearableDevice.getManufacturerName().equals(manufacturer)) {
+                    number++;
+                }
             }
-        }
-        return number;
+            return number;
+        } else return -1;
     }
 
     // Update methods
@@ -312,17 +326,16 @@ public class WearableDeviceAPI implements ISerializer {
     //TODO - sort methods
     // todo check this
     public void sortByPriceDescending() {
-        for (int i = 0; i >= wearableList.size() - 1; i++) {
-            int highestIndex = 0;
+        for (int i = wearableList.size() - 1; i >= 0; i--) {
+            int lowestIndex = 0;
             for (int j = 0; j <= i; j++) {
-                if (wearableList.get(j).getPrice() > wearableList.get(highestIndex).getPrice()) {
-                    highestIndex = j;
+                if (wearableList.get(j).getPrice() < wearableList.get(lowestIndex).getPrice()) {
+                    lowestIndex = j;
                 }
             }
-            swapWearableDevice(wearableList, highestIndex, i);
+            swapWearableDevice(wearableList, i, lowestIndex);
         }
     }
-
 
     public void sortByPriceAscending() {
         for (int i = wearableList.size() - 1; i >= 0; i--) {
@@ -336,13 +349,43 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    public void sortByPriceAscending(List<WearableDevice> listToSort) {
+        for (int i = listToSort.size() - 1; i >= 0; i--) {
+            int highestIndex = 0;
+            for (int j = 0; j <= i; j++) {
+                if (listToSort.get(j).getPrice() > listToSort.get(highestIndex).getPrice()) {
+                    highestIndex = j;
+                }
+            }
+            swapWearableDevice(listToSort, i, highestIndex);
+        }
+    }
+
+    /**
+     * Selection sort algorithm for  sorting the arraylist of devices by model name ascending.
+     */
+    public void sortProductsByModelNameAscending()
+    {
+        for (int i = wearableList.size() -1; i >= 0; i--)
+        {
+            int highestIndex = 0;
+            for (int j = 0; j <= i; j++)
+            {
+                if (wearableList.get(j).getModelName().compareTo(wearableList.get(highestIndex).getModelName()) > 0) {
+                    highestIndex = j;
+                }
+            }
+            swapWearableDevice(wearableList, i, highestIndex);
+        }
+    }
+
     // todo check this warning
     private void swapWearableDevice(List<WearableDevice> devices, int i, int j) {
-        WearableDevice smaller = devices.get(i);
-        WearableDevice bigger = devices.get(j);
+        WearableDevice intOriginal = devices.get(i);
+        WearableDevice intToSwap = devices.get(j);
 
-        devices.set(i, bigger);
-        devices.set(j, smaller);
+        devices.set(i, intToSwap);
+        devices.set(j, intOriginal);
     }
 
 
@@ -350,24 +393,27 @@ public class WearableDeviceAPI implements ISerializer {
 
     public List<WearableDevice> topFiveMostExpensiveWearableDevices() {
         List<WearableDevice> listOfTopFive = new ArrayList<>();
-        int numOfTimesHighestFound = 0;
-        int i = wearableList.size() - 1;
-        while (numOfTimesHighestFound < 5) {
-            while (i >= 0) {
-                int highestIndex = 0;
-                for (int j = 0; j <= i; j++) {
-                    if (wearableList.get(j).getPrice() > wearableList.get(highestIndex).getPrice()) {
-                        highestIndex = j;
-                    }
-                }
-                listOfTopFive.add(wearableList.get(highestIndex));
-                i--;
-            }
+        List<WearableDevice> newWearableListToSort = new ArrayList<>();
+        if (!isSortedAscending(wearableList)) {
+            newWearableListToSort = wearableList;
+            sortByPriceAscending(newWearableListToSort);
+        }
+        for (int i = newWearableListToSort.size()-1; i >= newWearableListToSort.size() - 5; i--) {
+            listOfTopFive.add(newWearableListToSort.get(i));
         }
         return listOfTopFive;
     }
 
-
+    public boolean isSortedAscending(List<WearableDevice> deviceList){
+        for(int i=0; i< deviceList.size()-1; i++) {
+            //in a sorted array current number should be
+            //always less than the next number in the array
+            if(deviceList.get(i).getPrice() > deviceList.get(i+1).getPrice()) {
+                return false;
+            }
+        }
+        return true;
+    }
     // Search Methods
 
     /**
@@ -389,17 +435,21 @@ public class WearableDeviceAPI implements ISerializer {
     public String searchByDeviceParam(String paramToSearch, String searchQuery) {
         boolean queryToCheck = false;
         String matchingDevices = "";
-
+//        System.out.println(paramToSearch);
         for (WearableDevice device : wearableList) {
             switch (paramToSearch) {
                 case "size":
                     queryToCheck = device.getSize().toUpperCase().contains(searchQuery.toUpperCase());
+                    break;
                 case "manufacturer name":
                     queryToCheck = device.getManufacturerName().toUpperCase().contains(searchQuery.toUpperCase());
+                    break;
                 case "material":
                     queryToCheck = device.getMaterial().toUpperCase().contains(searchQuery.toUpperCase());
+                    break;
                 case "id":
                     queryToCheck = device.getId().toUpperCase().contains(searchQuery.toUpperCase());
+                    break;
                 case "model name":
                     queryToCheck = device.getModelName().toUpperCase().contains(searchQuery.toUpperCase());
             }
