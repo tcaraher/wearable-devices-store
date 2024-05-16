@@ -317,21 +317,21 @@ public class Driver {
     //  Option 4(of reports menu) - List all devices above a price
     //------------------------------------------------------------------------------------------
     public void listAllDevicesAbovePrice(){
-        return;
+        double price = ScannerInput.readNextDouble("View the devices costing more than this price:  ");
+        System.out.println(wearableAPI.listAllWearableDeviceAbovePrice(price));
     }
 
     //------------------------------------------------------------------------------------------
     //  Option 5(of reports menu) - List all devices below a price
     //------------------------------------------------------------------------------------------
     public void listAllDevicesBelowPrice(){
-        return;
+        double price = ScannerInput.readNextDouble("View the devices costing less than this price:  ");
+        System.out.println(wearableAPI.listAllWearableDeviceBelowPrice(price));
     }
 
-    //------------------------------------------------------------------------------------------
-    //  Option 6(of reports menu) - List all devices below a price
-    //------------------------------------------------------------------------------------------
     public void listTopFiveMostExpensive(){
-        return;
+        System.out.println("Top five most expensive are: ");
+        System.out.println(wearableAPI.topFiveMostExpensiveWearableDevices());
     }
     public void listAllDevicesOfManufacturer(){
         System.out.println("List of all devices of chosen manufacturer: ");

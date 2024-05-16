@@ -157,6 +157,10 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    public String listAllWearableDevicesByChosenManufacturer() {
+        return "";
+    }
+
     //Get Technology methods
 
 
@@ -306,22 +310,63 @@ public class WearableDeviceAPI implements ISerializer {
 
 
     //TODO - sort methods
-
+    // todo check this
     public void sortByPriceDescending() {
-        return;
+        for (int i = 0; i >= wearableList.size() - 1; i++) {
+            int highestIndex = 0;
+            for (int j = 0; j <= i; j++) {
+                if (wearableList.get(j).getPrice() > wearableList.get(highestIndex).getPrice()) {
+                    highestIndex = j;
+                }
+            }
+            swapWearableDevice(wearableList, highestIndex, i);
+        }
     }
 
+
     public void sortByPriceAscending() {
-        return;
+        for (int i = wearableList.size() - 1; i >= 0; i--) {
+            int highestIndex = 0;
+            for (int j = 0; j <= i; j++) {
+                if (wearableList.get(j).getPrice() > wearableList.get(highestIndex).getPrice()) {
+                    highestIndex = j;
+                }
+            }
+            swapWearableDevice(wearableList, i, highestIndex);
+        }
     }
 
     // todo check this warning
-    private void swapWearableDevice(List wearableList, int i, int j) {
-        return;
+    private void swapWearableDevice(List<WearableDevice> devices, int i, int j) {
+        WearableDevice smaller = devices.get(i);
+        WearableDevice bigger = devices.get(j);
+
+        devices.set(i, bigger);
+        devices.set(j, smaller);
     }
 
 
     //TODO Top 5 methods
+
+    public List<WearableDevice> topFiveMostExpensiveWearableDevices() {
+        List<WearableDevice> listOfTopFive = new ArrayList<>();
+        int numOfTimesHighestFound = 0;
+        int i = wearableList.size() - 1;
+        while (numOfTimesHighestFound < 5) {
+            while (i >= 0) {
+                int highestIndex = 0;
+                for (int j = 0; j <= i; j++) {
+                    if (wearableList.get(j).getPrice() > wearableList.get(highestIndex).getPrice()) {
+                        highestIndex = j;
+                    }
+                }
+                listOfTopFive.add(wearableList.get(highestIndex));
+                i--;
+            }
+        }
+        return listOfTopFive;
+    }
+
 
     // Search Methods
 
