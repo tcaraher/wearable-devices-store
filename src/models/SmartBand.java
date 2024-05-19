@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 public class SmartBand extends WearableDevice {
 
     private boolean heartRateMonitor;
@@ -45,9 +47,23 @@ public class SmartBand extends WearableDevice {
     @Override
     public String toString() {
         String heartRateStr = heartRateMonitor ? "Includes Heart Rate Monitor" : "No Heart Rate Monitor included";
-        return "SmartBand: " +
+        return "{SmartBand: " +
                 heartRateStr + ", " +
                 super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SmartBand smartBand = (SmartBand) o;
+        return isHeartRateMonitor() == smartBand.isHeartRateMonitor();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), isHeartRateMonitor());
     }
 }
 

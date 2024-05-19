@@ -26,8 +26,6 @@ public class WearableDeviceAPI implements ISerializer {
 
     private File file;
 
-    //TODO I think this is what they mean for constructor
-
     public WearableDeviceAPI() {
         wearableList = new ArrayList<>();
     }
@@ -35,41 +33,56 @@ public class WearableDeviceAPI implements ISerializer {
     public boolean addWearableDevice(WearableDevice wearableDevice) {
         return wearableList.add(wearableDevice);
     }
+//------------------------------------------------------------------------------------------
+// CRUD Methods
+// ------------------------------------------------------------------------------------------
 
-    //todo leave this method in starter. what method?
-
-
-//TODO - CRUD Methods
-
-    //TODO - Number methods
-
-
-    // TODO Read/list methods
-
-    /**
-     * @param indexOfObjToReturn Index of the object to get
-     * @return returns the WearableDevice obj
-     */
-    public WearableDevice getWearableDeviceByIndex(int indexOfObjToReturn) {
-        if (isValidIndex(indexOfObjToReturn)) {
-            return wearableList.get(indexOfObjToReturn);
-        }
-        return null;
+    //------------------------------------------------------------------------------------------
+    // Number methods
+    //------------------------------------------------------------------------------------------
+    public int numberOfWearableDevices() {
+        return wearableList.size();
     }
 
-    // todo double check this but should be fine
-    public WearableDevice getWearableDeviceByID(String id) {
-        if (isValidId(id)) {
-            for (WearableDevice objToGetByID : wearableList) {
-                if (objToGetByID.getId().contains(id)) {
-                    return objToGetByID;
-                }
+    public int numberOfSmartBands() {
+        int number = 0;
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice instanceof SmartBand) {
+                number++;
             }
         }
-        return null;
+        return number;
     }
 
+    public int numberOfSmartWatches() {
+        int number = 0;
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice instanceof SmartWatch) {
+                number++;
+            }
+        }
+        return number;
+    }
 
+    public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
+        if (ManufacturerNameUtility.isValidMenuName(manufacturer)) {
+            int number = 0;
+            for (WearableDevice wearableDevice : wearableList) {
+                if (wearableDevice.getManufacturerName().equals(manufacturer)) {
+                    number++;
+                }
+            }
+            return number;
+        } else return -1;
+    }
+
+//------------------------------------------------------------------------------------------
+// Read/List Methods
+//------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------------------
+    // List Methods
+    //------------------------------------------------------------------------------------------
     public String listAllWearableDevices() {
         String str = "";
 
@@ -129,7 +142,6 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
 
-
     // TODO update this java doc
 
     /**
@@ -171,50 +183,57 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+//------------------------------------------------------------------------------------------
+// Get Technology methods
+//------------------------------------------------------------------------------------------
 
-
-    //Get Technology methods
-
-
-    public int numberOfWearableDevices() {
-        return wearableList.size();
-    }
-
-    public int numberOfSmartBands() {
-        int number = 0;
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice instanceof SmartBand) {
-                number++;
-            }
+    /**
+     * @param indexOfObjToReturn Index of the object to get
+     * @return returns the WearableDevice obj
+     */
+    public WearableDevice getWearableDeviceByIndex(int indexOfObjToReturn) {
+        if (isValidIndex(indexOfObjToReturn)) {
+            return wearableList.get(indexOfObjToReturn);
         }
-        return number;
+        return null;
     }
 
-    public int numberOfSmartWatches() {
-        int number = 0;
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice instanceof SmartWatch) {
-                number++;
-            }
-        }
-        return number;
-    }
-
-    public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
-        if (ManufacturerNameUtility.isValidMenuName(manufacturer)) {
-            int number = 0;
-            for (WearableDevice wearableDevice : wearableList) {
-                if (wearableDevice.getManufacturerName().equals(manufacturer)) {
-                    number++;
+    // todo double check this but should be fine
+    public WearableDevice getWearableDeviceByID(String id) {
+        if (isValidId(id)) {
+            for (WearableDevice objToGetByID : wearableList) {
+                if (objToGetByID.getId().contains(id)) {
+                    return objToGetByID;
                 }
             }
-            return number;
-        } else return -1;
+        }
+        return null;
     }
 
     // Update methods
 
-    public boolean updateSmartWatch(String id, SmartWatch detailsToUpdate) {
+    public boolean updateSmartWatchByIndex(int indexToUpdate, SmartWatch detailsToUpdate) {
+        //find the object by the index number
+        WearableDevice getDevice = getWearableDeviceByIndex(indexToUpdate);
+        //if the object exists, and it has found it, use the object passed in the parameters to
+        //update the found object in the ArrayList.
+        // todo check that i actually need this validation
+        if (getDevice == null) {
+            return false;
+        } else if (getDevice instanceof SmartWatch) {
+            getDevice.setSize(detailsToUpdate.getSize());
+            getDevice.setPrice(detailsToUpdate.getPrice());
+            getDevice.setManufacturerName(detailsToUpdate.getManufacturerName());
+            getDevice.setMaterial(detailsToUpdate.getMaterial());
+            getDevice.setModelName(detailsToUpdate.getModelName());
+            ((SmartWatch) getDevice).setDisplayType(detailsToUpdate.getDisplayType());
+            return true;
+        }
+        //if the object was not found, return false, indicating that the update was not successful
+        return false;
+    }
+
+    public boolean updateSmartWatchByID(String id, SmartWatch detailsToUpdate) {
         //find the object by the index number
         WearableDevice getDevice = getWearableDeviceByID(id);
         //if the object exists, and it has found it, use the object passed in the parameters to
@@ -235,9 +254,30 @@ public class WearableDeviceAPI implements ISerializer {
         return false;
     }
 
-    public boolean updateSmartBand(String id, SmartBand detailsToUpdate) {
+    public boolean updateSmartBandByID(String id, SmartBand detailsToUpdate) {
         //find the object by the index number
         WearableDevice getDevice = getWearableDeviceByID(id);
+        //if the object exists, and it has found it, use the object passed in the parameters to
+        //update the found object in the ArrayList.
+        // todo check that i actually need this validation
+        if (getDevice == null) {
+            return false;
+        } else if (getDevice instanceof SmartBand) {
+            getDevice.setSize(detailsToUpdate.getSize());
+            getDevice.setPrice(detailsToUpdate.getPrice());
+            getDevice.setManufacturerName(detailsToUpdate.getManufacturerName());
+            getDevice.setMaterial(detailsToUpdate.getMaterial());
+            getDevice.setModelName(detailsToUpdate.getModelName());
+            ((SmartBand) getDevice).setHeartRateMonitor(detailsToUpdate.getHeartRateMonitor());
+            return true;
+        }
+        //if the object was not found, return false, indicating that the update was not successful
+        return false;
+    }
+
+    public boolean updateSmartBandByIndex(int indexToUpdate, SmartBand detailsToUpdate) {
+        //find the object by the index number
+        WearableDevice getDevice = getWearableDeviceByIndex(indexToUpdate);
         //if the object exists, and it has found it, use the object passed in the parameters to
         //update the found object in the ArrayList.
         // todo check that i actually need this validation
@@ -299,7 +339,7 @@ public class WearableDeviceAPI implements ISerializer {
     should return true if it is valid, not false. It is not asking the question "isInvalidID?". It can still be used to check
     if the user entered an invalid id, or tries to make a new wearable device object with an invalid id by checking !isValidId.
      */
-    /*
+
     /**
      * Checks if id does/does not exist in collection.
      * @param id id of WearableDevice object in wearableList

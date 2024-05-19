@@ -5,6 +5,7 @@ import utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A Wearable Device abstract Class
@@ -50,9 +51,6 @@ public abstract class WearableDevice {
         // todo this also supossed to be within valid range?
         this.id = Utilities.truncateString(id, 10);
     }
-
-    // set up array to iterate?? extra credit
-//    private List<String> getFields = new ArrayList<>();
 
     public abstract double getInsurancePremium();
 
@@ -121,16 +119,29 @@ public abstract class WearableDevice {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WearableDevice that = (WearableDevice) o;
+        return Double.compare(getPrice(), that.getPrice()) == 0 && Objects.equals(getSize(), that.getSize()) && Objects.equals(getManufacturerName(), that.getManufacturerName()) && Objects.equals(getMaterial(), that.getMaterial()) && Objects.equals(getModelName(), that.getModelName()) && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSize(), getPrice(), getManufacturerName(), getMaterial(), getModelName(), getId());
+    }
+
     // TODO to string code formatting
     @Override
     public String toString() {
-        return "size= " + size +
+        return "size: " + size +
                 ", price= " + price +
                 ", manufacturerName= " + manufacturerName +
                 ", material= " + material +
                 ", " + ", modelName= " + modelName + ", " + ", id= " + id
                 + ", " + connectToInternet() + ", " +
-                "Insurance Premium = " + getInsurancePremium() + ", ";
+                "Insurance Premium = " + getInsurancePremium() + "}";
 
     }
 }
