@@ -2,24 +2,26 @@ package models;
 
 import java.util.Objects;
 
+/*
+ * Smart Band class inheriting the Wearable Device Class
+ */
+
 public class SmartBand extends WearableDevice {
 
     private boolean heartRateMonitor;
 
-    /**
-     * Constructor for objects of class WearableDevice
-     *
-     * @param size             Size of the wearable. It should be less than 10 chars, there is no default.
-     * @param price            Price of the wearable. Default value 20. Must be >= 20, with no upper limit.
-     * @param manufacturerName Brand/manufacturer name of the wearable. One of APPLE, SAMSUNG, Garmin, FitBit, Whoop. Uses {@link utils.ManufacturerNameUtility#isValidMenuName(String)}
-     * @param material         Material of the wearable. It should be less than 20 chars, no default.
-     * @param modelName        Model name. Max of 30 char
-     * @param id               Wearable id, unique in the system.
-     */
+
+    //------------------------------------------------------------------------------------------
+    //  Constructor. Follows all required validation and uses super to call parent constructor.
+    //------------------------------------------------------------------------------------------
     public SmartBand(String size, double price, String manufacturerName, String material, String modelName, String id, boolean heartRateMonitor) {
         super(size, price, manufacturerName, material, modelName, id);
         this.heartRateMonitor = heartRateMonitor;
     }
+
+    //------------------------------------------------------------------------------------------
+    //  Getters and setters.
+    //------------------------------------------------------------------------------------------
 
     public boolean isHeartRateMonitor() {
         return heartRateMonitor;
@@ -33,6 +35,9 @@ public class SmartBand extends WearableDevice {
         return heartRateMonitor;
     }
 
+    //------------------------------------------------------------------------------------------
+    // Abstract methods in parent class being overridden.
+    //------------------------------------------------------------------------------------------
 
     @Override
     public double getInsurancePremium() {
@@ -43,6 +48,10 @@ public class SmartBand extends WearableDevice {
     public String connectToInternet() {
         return "Connects to the internet via Companion App";
     }
+
+    //------------------------------------------------------------------------------------------
+    // Equals, hashCode and toString
+    //------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {

@@ -7,33 +7,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * A Wearable Device abstract Class
- *
- * @author Tom Cararaher
- * @version 1.0
+/*
+ * Wearable Device abstract Class
  */
 
 public abstract class WearableDevice {
+
+    // Instance fields as per spec
     private String size;
     private double price = 20;
-    private String manufacturerName;
+    private String manufacturerName = "unknown";
     private String material;
     private String modelName = "unknown";
-    private String id;
+    private String id = "unknown";
 
 
-    /**
-     * Constructor for objects of class WearableDevice
-     *
-     * @param size             Size of the wearable. It should be less than 10 chars, there is no default.
-     * @param price            Price of the wearable. Default value 20. Must be >= 20, with no upper limit.
-     * @param manufacturerName Brand/manufacturer name of the wearable. One of APPLE, SAMSUNG, Garmin, FitBit, Whoop. Uses {@link ManufacturerNameUtility#isValidMenuName(String)}
-     * @param material         Material of the wearable. It should be less than 20 chars, no default.
-     * @param modelName        Model name. Max of 30 char
-     * @param id               Wearable id, unique in the system.
-     */
-
+    //------------------------------------------------------------------------------------------
+    //  Constructor. Follows all required validation
+    //------------------------------------------------------------------------------------------
     public WearableDevice(String size, double price, String manufacturerName, String material, String modelName, String id) {
         this.size = Utilities.truncateString(size, 10);
 //        TODO Do exception handling for these with console message
@@ -52,9 +43,9 @@ public abstract class WearableDevice {
         this.id = Utilities.truncateString(id, 10);
     }
 
-    public abstract double getInsurancePremium();
-
-    public abstract String connectToInternet();
+    //------------------------------------------------------------------------------------------
+    //  Getters and setters
+    //------------------------------------------------------------------------------------------
 
     public String getSize() {
         return size;
@@ -119,6 +110,18 @@ public abstract class WearableDevice {
         }
     }
 
+    //------------------------------------------------------------------------------------------
+    // Abstract Methods
+    //------------------------------------------------------------------------------------------
+
+    public abstract double getInsurancePremium();
+
+    public abstract String connectToInternet();
+
+    //------------------------------------------------------------------------------------------
+    // Equals, hashCode and toString
+    //------------------------------------------------------------------------------------------
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -135,13 +138,7 @@ public abstract class WearableDevice {
     // TODO to string code formatting
     @Override
     public String toString() {
-        return "size: " + size +
-                ", price= " + price +
-                ", manufacturerName= " + manufacturerName +
-                ", material= " + material +
-                ", " + ", modelName= " + modelName + ", " + ", id= " + id
-                + ", " + connectToInternet() + ", " +
-                "Insurance Premium = " + getInsurancePremium() + "}";
+        return "size: " + size + ", price= " + price + ", manufacturerName= " + manufacturerName + ", material= " + material + ", " + ", modelName= " + modelName + ", " + ", id= " + id + ", " + connectToInternet() + ", " + "Insurance Premium = " + getInsurancePremium() + "}";
 
     }
 }

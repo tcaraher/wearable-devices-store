@@ -30,6 +30,11 @@ public class WearableDeviceAPI implements ISerializer {
         wearableList = new ArrayList<>();
     }
 
+    /**
+     * Adds a wearable device to the Array List of devices.
+     * @param wearableDevice
+     * @return returns the device added to the list.
+     */
     public boolean addWearableDevice(WearableDevice wearableDevice) {
         return wearableList.add(wearableDevice);
     }
@@ -40,10 +45,19 @@ public class WearableDeviceAPI implements ISerializer {
     //------------------------------------------------------------------------------------------
     // Number methods
     //------------------------------------------------------------------------------------------
+
+    /**
+     * Number of wearable devices
+     * @return The number of all wearable devices with .size().
+     */
     public int numberOfWearableDevices() {
         return wearableList.size();
     }
 
+    /**
+     * Number of smart bands. Loops through all wearable devices to check for if it is a smart band.
+     * @return The number of devices with .size().
+     */
     public int numberOfSmartBands() {
         int number = 0;
         for (WearableDevice wearableDevice : wearableList) {
@@ -54,6 +68,10 @@ public class WearableDeviceAPI implements ISerializer {
         return number;
     }
 
+    /**
+     * Number of smart watches. Loops through all wearable devices to check for if it is a smart watch.
+     * @return The number of devices with .size().
+     */
     public int numberOfSmartWatches() {
         int number = 0;
         for (WearableDevice wearableDevice : wearableList) {
@@ -64,6 +82,11 @@ public class WearableDeviceAPI implements ISerializer {
         return number;
     }
 
+    /**
+     * Number of devices by chosen manufacturer
+     * @param manufacturer Takes in requested manufacturer to query with
+     * @return number of devices. If none found returns -1.
+     */
     public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
         if (ManufacturerNameUtility.isValidMenuName(manufacturer)) {
             int number = 0;

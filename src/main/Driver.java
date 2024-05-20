@@ -12,9 +12,9 @@ import utils.Utilities;
 import java.util.HashMap;
 import java.util.Map;
 
-//todo check the no new line thing on the toStrings
 public class Driver {
 
+    // Sets up API. All logic actually reporting and making changes runs through the API. This driver class only handles user in/out.
     private WearableDeviceAPI wearableAPI = new WearableDeviceAPI();
 
     public static void main(String[] args) throws Exception {
@@ -29,9 +29,10 @@ public class Driver {
     }
 
     //------------------------------------------------------------------------------------------
-    // MENUS
+    // ******************** MENUS ********************
     //------------------------------------------------------------------------------------------
 
+    // Main menu and run
     private int mainMenu() {
         return ScannerInput.readNextInt("""
                 Wearable Devices Store          
@@ -48,7 +49,6 @@ public class Driver {
                    0) Exit
                 ==>>  """);
     }
-
 
     private void runMainMenu() {
         int option = mainMenu();
@@ -71,10 +71,8 @@ public class Driver {
         exitApp();
     }
 
-
     //------------------------------------------------------------------------------------------
     // Wearable Device CRUD menu (option 1)
-    //
     //------------------------------------------------------------------------------------------
 
     private void runWearableDeviceCrudMenu() {
@@ -103,8 +101,7 @@ public class Driver {
 
 
     //------------------------------------------------------------------------------------------
-    //  Option 2(of main menu) - Wearable Device Reports menu
-    //
+    //  Option 2(of main menu) - Reports menu
     //------------------------------------------------------------------------------------------
 
 
@@ -122,6 +119,11 @@ public class Driver {
             default -> System.out.println("Invalid option entered: " + option);
         }
     }
+
+    //------------------------------------------------------------------------------------------
+    //  Option 1(of reports menu level 1) - Wearable Device Reports menu.
+    //
+    //------------------------------------------------------------------------------------------
 
     private void runReportsMenuLevel2() {
         int option = ScannerInput.readNextInt("""
@@ -153,30 +155,38 @@ public class Driver {
     //todo update methods counting methods
 
     //------------------------------------------------------------------------------------------
+    //  ******************** Add, Delete, Update Methods ********************
+    //------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------------------
     // Option 1 (of CRUD menu) - Adds a wearable device.
-    // User chooses weather to add a smart band or smart watch, it requests the relevant info from the user and runs the addWearableDevice function in the api.
+    // User chooses whether to add a smart band or smart watch, it requests the relevant info from the user and runs the addWearableDevice
+    // function in the api.
     //------------------------------------------------------------------------------------------
     public void addWearableDevice() {
         boolean isAdded = false;
 
         int option = ScannerInput.readNextInt("""
                 ---------------------------
-                   1) Add a Smart Band  
+                   1) Add a Smart Band
                 |   2) Add a Smart Watch
                  
-                |   0) Back to CRUD menu 
+                |   0) Back to CRUD menu
                 ---------------------------
                 ==>> """);
 
         switch (option) {
             case 1 -> {
-                Map<String, String> deviceDetails = new HashMap<>(getParentWearableDeviceDetailsFromUser());
+                // Uses helper method that return a HashMap, getBaseWearableDeviceDetailsFromUser(). Asks the user the base info in the parent Wearable Device Field. See method's comment.
+                Map<String, String> deviceDetails = new HashMap<>(getBaseWearableDeviceDetailsFromUser());
+                // Gets the specific info required for the relevant class, in this case SmartBand requires a heart rate monitor field.
                 char hasHeartRateMonitor = ScannerInput.readNextChar("Does this model have a heart rate monitor (y/n)?: ");
                 boolean heartRateMonitor = Utilities.YNtoBoolean(hasHeartRateMonitor);
+                // Parse each key value pair returned from the deviceDetails hash map.
                 isAdded = wearableAPI.addWearableDevice(new SmartBand(deviceDetails.get("stringSize"), Double.parseDouble(deviceDetails.get("doublePrice")), deviceDetails.get("stringManufacturerName"), deviceDetails.get("stringMaterial"), deviceDetails.get("stringModelName"), deviceDetails.get("stringId"), heartRateMonitor));
             }
             case 2 -> {
-                Map<String, String> deviceDetails = new HashMap<>(getParentWearableDeviceDetailsFromUser());
+                Map<String, String> deviceDetails = new HashMap<>(getBaseWearableDeviceDetailsFromUser());
                 String displayType = ScannerInput.readNextLine("Enter the type of display:");
                 isAdded = wearableAPI.addWearableDevice(new SmartWatch(deviceDetails.get("stringSize"), Double.parseDouble(deviceDetails.get("doublePrice")), deviceDetails.get("stringManufacturerName"), deviceDetails.get("stringMaterial"), deviceDetails.get("stringModelName"), deviceDetails.get("stringId"), displayType));
             }
@@ -198,10 +208,11 @@ public class Driver {
     //  and ask the user to input the index of the device they wish to delete.
     //------------------------------------------------------------------------------------------
 
+    // Deletes a device via index. Asks user to pick the object from the list presented, and deletes it with the API method, which also returns the deleted device.
     //todo add delete by id... easy extra
     public void deleteWearableDevice() {
-        listAllWearableDevices();
         if (wearableAPI.numberOfWearableDevices() > 0) {
+            listAllWearableDevices();
             //only ask the user to choose the device to delete if devices exist
             int indexToDelete = ScannerInput.readNextInt("Enter the index of the device to delete ==> ");
             //pass the index for deleting and check for success.
@@ -211,15 +222,19 @@ public class Driver {
             } else {
                 System.out.println("Delete NOT Successful");
             }
+        } else {
+            System.out.println("No devices");
         }
         runMainMenu();
     }
 
-    // Option 3 (list all Wearable Devices is in the list method section)
-
     //------------------------------------------------------------------------------------------
-    //  Option 4 (of CRUD menu) - Update a wearable device. The user is asked if it is a watch band or smart watch,
-    //  then presented and the required details are then gathered before updating the specific object.
+    //  Option 4 (of CRUD menu) - Update a wearable device. The user is asked if it is a watch band or smart watch they would like to update, either by ID or index,
+    //  then presented with a list of all devices of that class. The required details are then gathered before updating the specific object with the API.
+    //  Each case uses validation to check the inputted index or id, and whether there are any devices of that class to display. Also informs the user of
+    //  the validation if it fails.
+    //
+    //  Also it uses the same getBaseWearableDeviceDetailsFromUser() helper method as before to collect the Wearable Device fields.
     //------------------------------------------------------------------------------------------
 
     public void updateWearableDevice() {
@@ -235,14 +250,13 @@ public class Driver {
                     ---------------------------------------
                     ==>> """);
 
-
             switch (option) {
                 case 1 -> {
                     listAllWearableSmartBands();
                     if (wearableAPI.numberOfSmartBands() > 0) {
                         int deviceIndexToUpdate = ScannerInput.readNextInt("Enter the index of the device to update ==> ");
                         if (wearableAPI.isValidIndex(deviceIndexToUpdate)) {
-                            Map<String, String> deviceDetails = new HashMap<>(getParentWearableDeviceDetailsFromUser());
+                            Map<String, String> deviceDetails = new HashMap<>(getBaseWearableDeviceDetailsFromUser());
                             char hasHeartRateMonitor = ScannerInput.readNextChar("Does this model have a heart rate monitor (y/n)?: ");
                             // Sets the char to a boolean via the util
                             boolean heartRateMonitor = Utilities.YNtoBoolean(hasHeartRateMonitor);
@@ -257,7 +271,7 @@ public class Driver {
                     if (wearableAPI.numberOfSmartBands() > 0) {
                         String deviceIDToUpdate = ScannerInput.readNextLine("Enter the id of the device to update ==> ");
                         if (wearableAPI.isValidId(deviceIDToUpdate)) {
-                            Map<String, String> deviceDetails = new HashMap<>(getParentWearableDeviceDetailsFromUser());
+                            Map<String, String> deviceDetails = new HashMap<>(getBaseWearableDeviceDetailsFromUser());
                             char hasHeartRateMonitor = ScannerInput.readNextChar("Does this model have a heart rate monitor (y/n)?: ");
                             // Sets the char to a boolean via the util
                             boolean heartRateMonitor = Utilities.YNtoBoolean(hasHeartRateMonitor);
@@ -268,13 +282,11 @@ public class Driver {
                     }
                 }
                 case 3 -> {
-                    //ask the user to enter the index of the object to update, and assuming it's valid and is a PhotoPost,
-                    //gather the new data from the user and update the selected object.
                     listAllWearableSmartWatches();
                     if (wearableAPI.numberOfSmartWatches() > 0) {
                         int deviceIndexToUpdate = ScannerInput.readNextInt("Enter the index of the device to update: ");
                         if (wearableAPI.isValidIndex(deviceIndexToUpdate)) {
-                            Map<String, String> deviceDetails = new HashMap<>(getParentWearableDeviceDetailsFromUser());
+                            Map<String, String> deviceDetails = new HashMap<>(getBaseWearableDeviceDetailsFromUser());
                             String displayType = ScannerInput.readNextLine("Enter the type of display:");
                             isUpdated = wearableAPI.updateSmartWatchByIndex(deviceIndexToUpdate, new SmartWatch(deviceDetails.get("stringSize"), Double.parseDouble(deviceDetails.get("doublePrice")), deviceDetails.get("stringManufacturerName"), deviceDetails.get("stringMaterial"), deviceDetails.get("stringModelName"), deviceDetails.get("stringId"), displayType));
                         } else System.out.println("Not a valid index.");
@@ -287,7 +299,7 @@ public class Driver {
                     if (wearableAPI.numberOfSmartWatches() > 0) {
                         String deviceIDToUpdate = ScannerInput.readNextLine("Enter the id of the device to update: ");
                         if (wearableAPI.isValidId(deviceIDToUpdate)) {
-                            Map<String, String> deviceDetails = new HashMap<>(getParentWearableDeviceDetailsFromUser());
+                            Map<String, String> deviceDetails = new HashMap<>(getBaseWearableDeviceDetailsFromUser());
                             String displayType = ScannerInput.readNextLine("Enter the type of display:");
                             isUpdated = wearableAPI.updateSmartWatchByID(deviceIDToUpdate, new SmartWatch(deviceDetails.get("stringSize"), Double.parseDouble(deviceDetails.get("doublePrice")), deviceDetails.get("stringManufacturerName"), deviceDetails.get("stringMaterial"), deviceDetails.get("stringModelName"), deviceDetails.get("stringId"), displayType));
                         } else System.out.println("Not a valid ID.");
@@ -310,7 +322,7 @@ public class Driver {
     }
 
     //------------------------------------------------------------------------------------------
-    //  List Methods/Reports menu options
+    //  ******************** List Methods/Reports menu options ********************
     //------------------------------------------------------------------------------------------
 
     //------------------------------------------------------------------------------------------
@@ -363,7 +375,8 @@ public class Driver {
 
     //------------------------------------------------------------------------------------------
     //  Option 7(of reports menu) - List all devices of a chosen manufacturer.
-    //  Asks user for the manufacturer they would like to list and returns same.
+    //  Asks user for the manufacturer they would like to list and returns same. Switch statement
+    //  sets the local variable manufacturerToSearch to the users choice.
     //------------------------------------------------------------------------------------------
     public void listAllDevicesOfManufacturer() {
         String manufacturerToSearch = "";
@@ -405,14 +418,13 @@ public class Driver {
         }
     }
 
-    //---------------------
-    //  Search/Sort Methods
-    //---------------------
+    //------------------------------------------------------------------------------------------
+    //  ******************** Search/Sort Methods ********************
+    //------------------------------------------------------------------------------------------
 
     //------------------------------------------------------------------------------------------
     // Search Wearable Devices (option 4 of main menu)
-    // Asks the user for the paramater to search by, then asks the user for a string with the query.
-    //
+    // Asks the user for the parameter to search by, then asks the user for a string with the query.
     //------------------------------------------------------------------------------------------
     public void searchWearableDevices() {
         String paramToSearch = "";
@@ -458,7 +470,8 @@ public class Driver {
     }
 
     //------------------------------------------------------------------------------------------
-    // Sort Devices (opt 5 of main menu). Sorts wearable devices based on user request.
+    // Sort Devices (opt 5 of main menu). Sorts wearable devices based on user request. As will all methods in Driver, each method from the api
+    // handles the logic for sorting.
     //------------------------------------------------------------------------------------------
 
     public void sortWearableDevices() {
@@ -498,14 +511,15 @@ public class Driver {
     }
 
 
-    //---------------------
-    //  Helper Methods
-    //---------------------
+    //------------------------------------------------------------------------------
+    //  ******************* Helper Methods ******************************
+    //------------------------------------------------------------------------------
+
 
     // Gets parent class WearableDevice base information from the user. Helps make all of the update and add methods
     // dry by not having to rewrite these statements multiple times.
     // Returns HashMap to easily query the correct values in the relevant constructors.
-    private Map<String, String> getParentWearableDeviceDetailsFromUser() {
+    private Map<String, String> getBaseWearableDeviceDetailsFromUser() {
         Map<String, String> deviceDetails = new HashMap<>();
         String size = ScannerInput.readNextLine("Enter the size of the wearable: ");
         deviceDetails.put("stringSize", size);
@@ -522,12 +536,13 @@ public class Driver {
         return deviceDetails;
     }
 
+    // Exits app
     private void exitApp() {
         System.out.println("Exiting....");
         System.exit(0);
     }
 
-    //load all the products into the store from a file on the hard disk
+    //Load all the products into the wearable device store from a file on the hard disk
     private void loadDevices() {
         try {
             wearableAPI.load();
@@ -535,6 +550,8 @@ public class Driver {
             System.err.println("Error reading from file: " + e);
         }
     }
+
+    //Save all the products into the wearable device store from a file on the hard disk
 
     private void saveDevices() {
         try {
