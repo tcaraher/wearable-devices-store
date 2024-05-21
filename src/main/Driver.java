@@ -152,8 +152,6 @@ public class Driver {
         }
     }
 
-    //todo update methods counting methods
-
     //------------------------------------------------------------------------------------------
     //  ******************** Add, Delete, Update Methods ********************
     //------------------------------------------------------------------------------------------
@@ -209,7 +207,6 @@ public class Driver {
     //------------------------------------------------------------------------------------------
 
     // Deletes a device via index. Asks user to pick the object from the list presented, and deletes it with the API method, which also returns the deleted device.
-    //todo add delete by id... easy extra
     public void deleteWearableDevice() {
         if (wearableAPI.numberOfWearableDevices() > 0) {
             listAllWearableDevices();
@@ -329,48 +326,60 @@ public class Driver {
     //  Option 1(of reports menu) and Option 3(of Wearable Device CRUD menu) - List all devices
     //------------------------------------------------------------------------------------------
     public void listAllWearableDevices() {
-        System.out.println("List of all wearable devices: ");
-        System.out.println(wearableAPI.listAllWearableDevices());
+        if (wearableAPI.numberOfWearableDevices() > 0) {
+            System.out.println("List of all wearable devices: ");
+            System.out.println(wearableAPI.listAllWearableDevices());
+        } else System.out.println("There are no devices yet");
     }
 
     //------------------------------------------------------------------------------------------
     //  Option 2(of reports menu) - List all smart bands
     //------------------------------------------------------------------------------------------
     public void listAllWearableSmartBands() {
-        System.out.println("List of all smart bands: ");
-        System.out.println(wearableAPI.listAllSmartBands());
+        if (wearableAPI.numberOfSmartBands() > 0) {
+            System.out.println("List of all smart bands: ");
+            System.out.println(wearableAPI.listAllSmartBands());
+        } else System.out.println("There are no smart bands yet");
     }
 
     //------------------------------------------------------------------------------------------
     //  Option 3(of reports menu) - List all smart watches
     //------------------------------------------------------------------------------------------
     public void listAllWearableSmartWatches() {
-        System.out.println("List of all smart watches: ");
-        System.out.println(wearableAPI.listAllSmartWatches());
+        if (wearableAPI.numberOfSmartWatches() > 0) {
+            System.out.println("List of all smart watches: ");
+            System.out.println(wearableAPI.listAllSmartWatches());
+        } else System.out.println("There are no smart watches yet");
     }
 
     //------------------------------------------------------------------------------------------
     //  Option 4(of reports menu) - List all devices above a price
     //------------------------------------------------------------------------------------------
     public void listAllDevicesAbovePrice() {
-        double price = ScannerInput.readNextDouble("View the devices costing more than this price:  ");
-        System.out.println(wearableAPI.listAllWearableDeviceAbovePrice(price));
+        if (wearableAPI.numberOfWearableDevices() > 0) {
+            double price = ScannerInput.readNextDouble("View the devices costing more than this price:  ");
+            System.out.println(wearableAPI.listAllWearableDeviceAbovePrice(price));
+        } else System.out.println("There are no devices yet");
     }
 
     //------------------------------------------------------------------------------------------
     //  Option 5(of reports menu) - List all devices below a price
     //------------------------------------------------------------------------------------------
     public void listAllDevicesBelowPrice() {
-        double price = ScannerInput.readNextDouble("View the devices costing less than this price:  ");
-        System.out.println(wearableAPI.listAllWearableDeviceBelowPrice(price));
+        if (wearableAPI.numberOfWearableDevices() > 0) {
+            double price = ScannerInput.readNextDouble("View the devices costing less than this price:  ");
+            System.out.println(wearableAPI.listAllWearableDeviceBelowPrice(price));
+        } else System.out.println("There are no devices yet");
     }
 
     //------------------------------------------------------------------------------------------
     //  Option 6(of reports menu) - List top five most expensive devices
     //------------------------------------------------------------------------------------------
     public void listTopFiveMostExpensive() {
-        System.out.println("Top five most expensive are: ");
-        System.out.println(wearableAPI.topFiveMostExpensiveWearableDevices());
+        if (wearableAPI.numberOfWearableDevices() > 0) {
+            System.out.println("Top five most expensive are: ");
+            System.out.println(wearableAPI.topFiveMostExpensiveWearableDevices());
+        } else System.out.println("There are no devices yet");
     }
 
     //------------------------------------------------------------------------------------------
@@ -430,15 +439,15 @@ public class Driver {
         String paramToSearch = "";
 
         int option = ScannerInput.readNextInt("""
-                ---------------------------
-                | Search by:             |
-                |   1) ID                |
-                |   2) Material          |
-                |   3) Manufacturer Name |
-                |   4) Model Name        |
-                |   5) Display Type      |
-                |   0) Main Menu         |
-                ---------------------------
+                -----------------------------------------
+                 Search by:          
+                   1) ID                
+                   2) Material          
+                   3) Manufacturer Name 
+                   4) Model Name        
+                   5) Display Type (Smart Watch Only)     
+                   0) Main Menu         
+                --------------------------------------------
                 ==>> """);
 
         switch (option) {
@@ -515,7 +524,7 @@ public class Driver {
     //  ******************* Helper Methods ******************************
     //------------------------------------------------------------------------------
 
-
+    // ** EXTRA CREDIT ***
     // Gets parent class WearableDevice base information from the user. Helps make all of the update and add methods
     // dry by not having to rewrite these statements multiple times.
     // Returns HashMap to easily query the correct values in the relevant constructors.

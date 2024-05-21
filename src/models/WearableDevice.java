@@ -27,7 +27,7 @@ public abstract class WearableDevice {
     //------------------------------------------------------------------------------------------
     public WearableDevice(String size, double price, String manufacturerName, String material, String modelName, String id) {
         this.size = Utilities.truncateString(size, 10);
-//        TODO Do exception handling for these with console message
+//      Implements all validation
         if (Utilities.minValue(price, 20)) {
             this.price = price;
         }
@@ -39,9 +39,9 @@ public abstract class WearableDevice {
         this.material = Utilities.truncateString(material, 20);
         this.modelName = Utilities.truncateString(modelName, 30);
         ;
-        // todo this also supossed to be within valid range?
         this.id = Utilities.truncateString(id, 10);
     }
+
 
     //------------------------------------------------------------------------------------------
     //  Getters and setters
@@ -135,7 +135,7 @@ public abstract class WearableDevice {
         return Objects.hash(getSize(), getPrice(), getManufacturerName(), getMaterial(), getModelName(), getId());
     }
 
-    // TODO to string code formatting
+
     @Override
     public String toString() {
         return "size: " + size + ", price= " + price + ", manufacturerName= " + manufacturerName + ", material= " + material + ", " + ", modelName= " + modelName + ", " + ", id= " + id + ", " + connectToInternet() + ", " + "Insurance Premium = " + getInsurancePremium() + "}";

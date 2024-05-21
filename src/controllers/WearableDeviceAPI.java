@@ -35,6 +35,14 @@ public class WearableDeviceAPI implements ISerializer {
         this.fileName = fileName;
     }
 
+
+//------------------------------------------------------------------------------------------
+// CRUD Methods
+// ------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
+    // Add method
+    //------------------------------------------------------------------------------------------
+
     /**
      * Adds a wearable device to the Array List of devices.
      * @param wearableDevice
@@ -43,227 +51,13 @@ public class WearableDeviceAPI implements ISerializer {
     public boolean addWearableDevice(WearableDevice wearableDevice) {
         return wearableList.add(wearableDevice);
     }
-//------------------------------------------------------------------------------------------
-// CRUD Methods
-// ------------------------------------------------------------------------------------------
 
     //------------------------------------------------------------------------------------------
-    // Number methods
+    // Update methods
     //------------------------------------------------------------------------------------------
 
     /**
-     * Number of wearable devices
-     * @return The number of all wearable devices with .size().
-     */
-    public int numberOfWearableDevices() {
-        return wearableList.size();
-    }
-
-    /**
-     * Number of smart bands. Loops through all wearable devices to check for if it is a smart band.
-     * @return The number of devices with .size().
-     */
-    public int numberOfSmartBands() {
-        int number = 0;
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice instanceof SmartBand) {
-                number++;
-            }
-        }
-        return number;
-    }
-
-    /**
-     * Number of smart watches. Loops through all wearable devices to check for if it is a smart watch.
-     * @return The number of devices with .size().
-     */
-    public int numberOfSmartWatches() {
-        int number = 0;
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice instanceof SmartWatch) {
-                number++;
-            }
-        }
-        return number;
-    }
-
-    /**
-     * Number of devices by chosen manufacturer
-     * @param manufacturer Takes in requested manufacturer to query with
-     * @return number of devices. If none found returns -1.
-     */
-    public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
-        if (ManufacturerNameUtility.isValidMenuName(manufacturer)) {
-            int number = 0;
-            for (WearableDevice wearableDevice : wearableList) {
-                if (wearableDevice.getManufacturerName().equals(manufacturer)) {
-                    number++;
-                }
-            }
-            return number;
-        } else return -1;
-    }
-
-//------------------------------------------------------------------------------------------
-// Read/List Methods
-//------------------------------------------------------------------------------------------
-
-    //------------------------------------------------------------------------------------------
-    // List Methods
-    //------------------------------------------------------------------------------------------
-
-    /**
-     * Lists all devices
-     * @return toString of each device
-     */
-    public String listAllWearableDevices() {
-        String str = "";
-
-        for (WearableDevice wearableDevice : wearableList) {
-            str += wearableList.indexOf(wearableDevice) + ": " + wearableDevice.toString() + "\n";
-        }
-
-        if (str.isEmpty()) {
-            return "No Posts";
-        } else {
-            return str;
-        }
-    }
-
-    /**
-     * Lists all smart bands. Loops through each wearable device in wearableList, checks if it is a smart band and adds it to the string
-     * @return toString of each device, or 'no smart bands'
-     */
-    public String listAllSmartBands() {
-        String str = "";
-
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice instanceof SmartBand) {
-                str += wearableList.indexOf(wearableDevice) + ": " + wearableDevice.toString() + "\n";
-            }
-        }
-
-        if (str.isEmpty()) {
-            return "No Smart Bands";
-        } else {
-            return str;
-        }
-    }
-
-    /**
-     * Lists all smartwatches. Loops through each wearable device in wearableList, checks if it is a smartwatches and adds it to the string
-     * @return toString of each device, or no 'smart watches'
-     */
-    public String listAllSmartWatches() {
-        String str = "";
-
-        for (WearableDevice wearableDevice : wearableList) {
-            if (wearableDevice instanceof SmartWatch) {
-                str += wearableList.indexOf(wearableDevice) + ": " + wearableDevice.toString() + "\n";
-            }
-        }
-
-        if (str.isEmpty()) {
-            return "No Smart Watches";
-        } else {
-            return str;
-        }
-    }
-
-
-    /**
-     * Lists all devices by chosen manufacturer  *******EXTRA CREDIT********
-     * @return toString of each device by passed in manufacturer
-     */
-    public String listAllWearableDevicesByChosenManufacturer(String chosenManufacturer) {
-        if (ManufacturerNameUtility.isValidMenuName(chosenManufacturer)) {
-            String str = "";
-            for (WearableDevice wearableDevice : wearableList) {
-                if (wearableDevice.getManufacturerName().contains(chosenManufacturer)) {
-                    str += wearableList.indexOf(wearableDevice) + ":" + wearableDevice.toString() + "\n";
-                }
-            }
-            return str;
-        } else return null;
-    }
-
-
-    // TODO update this java doc
-
-    /**
-     * Lists all wearable devices above passed in price. Loops through the list and checks if the current iterated object is larger than the price passed in. Add it to the string if true.
-     * @param price double price to list devices above
-     * @return string of devices above the price
-     */
-    public String listAllWearableDeviceAbovePrice(double price) {
-        String str = "";
-        for (int i = 0; i < wearableList.size(); i++) {
-            if (wearableList.get(i).getPrice() > price)
-                str += i + ": " + wearableList.get(i) + "\n";
-        }
-        if (str.isEmpty()) {
-            return "No WearableDevice more expensive than: " + price;
-        } else {
-            return str;
-        }
-    }
-
-    /**
-     * Lists all wearable devices below passed in price. Loops through the list and checks if the current iterated object is larger than the price passed in. Add it to the string if true.
-     * @param price double price to list devices below
-     * @return string of devices below the price
-     */
-    public String listAllWearableDeviceBelowPrice(double price) {
-        String str = "";
-        for (int i = 0; i < wearableList.size(); i++) {
-            if (wearableList.get(i).getPrice() < price)
-                str += i + ": " + wearableList.get(i) + "\n";
-        }
-        if (str.isEmpty()) {
-            return "No WearableDevice cheaper than: " + price;
-        } else {
-            return str;
-        }
-    }
-
-//------------------------------------------------------------------------------------------
-// Get Technology methods
-//------------------------------------------------------------------------------------------
-
-    /**
-     * Gets device by index with validation
-     * @param indexOfObjToReturn Index of the object to get
-     * @return returns the WearableDevice obj
-     */
-    public WearableDevice getWearableDeviceByIndex(int indexOfObjToReturn) {
-        if (isValidIndex(indexOfObjToReturn)) {
-            return wearableList.get(indexOfObjToReturn);
-        }
-        return null;
-    }
-
-    /**
-     * Gets device by id with validation
-     * @param id id of the object to get
-     * @return returns the WearableDevice obj
-     */
-    public WearableDevice getWearableDeviceByID(String id) {
-        if (isValidId(id)) {
-            for (WearableDevice objToGetByID : wearableList) {
-                if (objToGetByID.getId().contains(id)) {
-                    return objToGetByID;
-                }
-            }
-        }
-        return null;
-    }
-
-//------------------------------------------------------------------------------------------
-// Update methods
-//------------------------------------------------------------------------------------------
-
-    /**
-     * Updates Smart Watch by index
+     * Updates Smart Watch by index *** Extra Credit ***
      * @param indexToUpdate Pass in the index of the wearableList to update
      * @param detailsToUpdate A SmartWatch type object with the details to update
      * @return true if the update is object was found and updated, false if not
@@ -345,7 +139,7 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
     /**
-     * Updates Smart Band
+     * Updates Smart Band *** Extra Credit ***
      * @param indexToUpdate Pass in the index of the wearableList to update
      * @param detailsToUpdate A SmartBand type object with the details to update
      * @return true if the update is object was found and updated, false if not
@@ -373,16 +167,15 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
 
-//------------------------------------------------------------------------------------------
-// Update methods
-//------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
+    // Delete methods
+    //------------------------------------------------------------------------------------------
 
     /**
      * Deletes WearableDevice object by index
      * @param indexToDelete The index to delete
      * @return if the index is valid, returns the object that was deleted
      */
-//    TODO check if this returns the object
     public WearableDevice deleteWearableDeviceByIndex(int indexToDelete) {
         if (isValidIndex(indexToDelete)) {
             return wearableList.remove(indexToDelete);
@@ -406,6 +199,219 @@ public class WearableDeviceAPI implements ISerializer {
         }
         return null;
     }
+
+    //------------------------------------------------------------------------------------------
+    // Get Technology methods
+    //------------------------------------------------------------------------------------------
+
+    /**
+     * Gets device by index with validation
+     * @param indexOfObjToReturn Index of the object to get
+     * @return returns the WearableDevice obj
+     */
+    public WearableDevice getWearableDeviceByIndex(int indexOfObjToReturn) {
+        if (isValidIndex(indexOfObjToReturn)) {
+            return wearableList.get(indexOfObjToReturn);
+        }
+        return null;
+    }
+
+    /**
+     * Gets device by id with validation
+     * @param id id of the object to get
+     * @return returns the WearableDevice obj
+     */
+    public WearableDevice getWearableDeviceByID(String id) {
+        if (isValidId(id)) {
+            for (WearableDevice objToGetByID : wearableList) {
+                if (objToGetByID.getId().contains(id)) {
+                    return objToGetByID;
+                }
+            }
+        }
+        return null;
+    }
+
+
+//------------------------------------------------------------------------------------------
+// Read/List Methods
+//------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------------------
+    // Number methods
+    //------------------------------------------------------------------------------------------
+
+    /**
+     * Number of wearable devices
+     * @return The number of all wearable devices with .size().
+     */
+    public int numberOfWearableDevices() {
+        return wearableList.size();
+    }
+
+    /**
+     * Number of smart bands. Loops through all wearable devices to check for if it is a smart band.
+     * @return The number of devices with .size().
+     */
+    public int numberOfSmartBands() {
+        int number = 0;
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice instanceof SmartBand) {
+                number++;
+            }
+        }
+        return number;
+    }
+
+    /**
+     * Number of smart watches. Loops through all wearable devices to check for if it is a smart watch.
+     * @return The number of devices with .size().
+     */
+    public int numberOfSmartWatches() {
+        int number = 0;
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice instanceof SmartWatch) {
+                number++;
+            }
+        }
+        return number;
+    }
+
+    /**
+     * Number of devices by chosen manufacturer
+     * @param manufacturer Takes in requested manufacturer to query with
+     * @return number of devices. If none found returns -1.
+     */
+    public int numberOfWearableDeviceByChosenManufacturer(String manufacturer) {
+        if (ManufacturerNameUtility.isValidMenuName(manufacturer)) {
+            int number = 0;
+            for (WearableDevice wearableDevice : wearableList) {
+                if (wearableDevice.getManufacturerName().equals(manufacturer)) {
+                    number++;
+                }
+            }
+            return number;
+        } else return -1;
+    }
+
+    //------------------------------------------------------------------------------------------
+    // List Methods
+    //------------------------------------------------------------------------------------------
+
+    /**
+     * Lists all devices
+     * @return toString of each device
+     */
+    public String listAllWearableDevices() {
+        String str = "";
+
+        for (WearableDevice wearableDevice : wearableList) {
+            str += wearableList.indexOf(wearableDevice) + ": " + wearableDevice.toString() + "\n";
+        }
+
+        if (str.isEmpty()) {
+            return "No Posts";
+        } else {
+            return str;
+        }
+    }
+
+    /**
+     * Lists all smart bands. Loops through each wearable device in wearableList, checks if it is a smart band and adds it to the string
+     * @return toString of each device, or 'no smart bands'
+     */
+    public String listAllSmartBands() {
+        String str = "";
+
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice instanceof SmartBand) {
+                str += wearableList.indexOf(wearableDevice) + ": " + wearableDevice.toString() + "\n";
+            }
+        }
+
+        if (str.isEmpty()) {
+            return "No Smart Bands";
+        } else {
+            return str;
+        }
+    }
+
+    /**
+     * Lists all smartwatches. Loops through each wearable device in wearableList, checks if it is a smartwatches and adds it to the string
+     * @return toString of each device, or no 'smart watches'
+     */
+    public String listAllSmartWatches() {
+        String str = "";
+
+        for (WearableDevice wearableDevice : wearableList) {
+            if (wearableDevice instanceof SmartWatch) {
+                str += wearableList.indexOf(wearableDevice) + ": " + wearableDevice.toString() + "\n";
+            }
+        }
+
+        if (str.isEmpty()) {
+            return "No Smart Watches";
+        } else {
+            return str;
+        }
+    }
+
+
+    /**
+     * Lists all devices by chosen manufacturer  *******EXTRA CREDIT********
+     * @return toString of each device by passed in manufacturer
+     */
+    public String listAllWearableDevicesByChosenManufacturer(String chosenManufacturer) {
+        if (ManufacturerNameUtility.isValidMenuName(chosenManufacturer)) {
+            String str = "";
+            for (WearableDevice wearableDevice : wearableList) {
+                if (wearableDevice.getManufacturerName().contains(chosenManufacturer)) {
+                    str += wearableList.indexOf(wearableDevice) + ":" + wearableDevice.toString() + "\n";
+                }
+            }
+            return str;
+        } else return null;
+    }
+
+
+
+    /**
+     * Lists all wearable devices above passed in price. Loops through the list and checks if the current iterated object is larger than the price passed in. Add it to the string if true.
+     * @param price double price to list devices above
+     * @return string of devices above the price
+     */
+    public String listAllWearableDeviceAbovePrice(double price) {
+        String str = "";
+        for (int i = 0; i < wearableList.size(); i++) {
+            if (wearableList.get(i).getPrice() > price)
+                str += i + ": " + wearableList.get(i) + "\n";
+        }
+        if (str.isEmpty()) {
+            return "No WearableDevice more expensive than: " + price;
+        } else {
+            return str;
+        }
+    }
+
+    /**
+     * Lists all wearable devices below passed in price. Loops through the list and checks if the current iterated object is larger than the price passed in. Add it to the string if true.
+     * @param price double price to list devices below
+     * @return string of devices below the price
+     */
+    public String listAllWearableDeviceBelowPrice(double price) {
+        String str = "";
+        for (int i = 0; i < wearableList.size(); i++) {
+            if (wearableList.get(i).getPrice() < price)
+                str += i + ": " + wearableList.get(i) + "\n";
+        }
+        if (str.isEmpty()) {
+            return "No WearableDevice cheaper than: " + price;
+        } else {
+            return str;
+        }
+    }
+
+
 
 
     // Validation Methods
@@ -490,6 +496,7 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
     /**
+     * **EXTRA CREDIT**
      * Selection sort algorithm for sorting the arraylist of devices by model name ascending.
      */
     public void sortProductsByModelNameAscending()
@@ -547,6 +554,31 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
     /**
+     * Returns a list of the top five most expensive smart watches.
+     * Sets up a new wearableList to sort and adds loops through the original wearableList, adding the smart watch obj if it is an instance of..
+     * Then sorts the new list if the original list is not already sorted with my isSortedAscending method.
+     * Then takes the top five from the new list and adds them to the listOfTopFive
+     * @return list of top five
+     */
+    public List<WearableDevice> topFiveMostExpensiveSmartWatches() {
+        List<WearableDevice> listOfTopFive = new ArrayList<>();
+        List<WearableDevice> newWearableListToSort = new ArrayList<>();
+        for (WearableDevice device : wearableList){
+            if (device instanceof SmartWatch) {
+                newWearableListToSort.add(device);
+            }
+        }
+        if (!isSortedAscending(wearableList)) {
+            sortByPriceAscending(newWearableListToSort);
+        }
+        for (int i = newWearableListToSort.size()-1; i >= newWearableListToSort.size() - 5; i--) {
+            listOfTopFive.add(newWearableListToSort.get(i));
+        }
+        return listOfTopFive;
+    }
+
+    /**
+     * *** Extra Credit
      * Checks if the list is sorted in ascending order
      * @param deviceList takes in a List of type WearableDevice
      * @return true/false if the list is sorted or not.
@@ -564,6 +596,7 @@ public class WearableDeviceAPI implements ISerializer {
     // Search Methods
 
     /**
+     * ** EXTRA CREDIT
      * This method returns a string containing all devices whose device paramater passed in contained (regardless of case)
      * the search string.  The index location of the device in the arraylist is also returned. This saves having a method for each
      * string paramater of Wearable Device to run a search on.
