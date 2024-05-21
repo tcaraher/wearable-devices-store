@@ -15,7 +15,7 @@ import java.util.Map;
 public class Driver {
 
     // Sets up API. All logic actually reporting and making changes runs through the API. This driver class only handles user in/out.
-    private WearableDeviceAPI wearableAPI = new WearableDeviceAPI();
+    private WearableDeviceAPI wearableAPI = new WearableDeviceAPI("wearableDevices.xml");
 
     public static void main(String[] args) throws Exception {
         new Driver().start();
@@ -79,10 +79,10 @@ public class Driver {
         int option = ScannerInput.readNextInt("""
                 WearableDevice Store Menu
                 ------------------------------
-                    1) Add a Wearable Device
-                    2) Delete a Wearable Device
-                    3) List all Wearable Devices
-                    4) Update Wearable Device
+                   1) Add a Wearable Device
+                   2) Delete a Wearable Device
+                   3) List all Wearable Devices
+                   4) Update Wearable Device
                     -----------------------------
                     O) Return to main menu
                      ==>> """);

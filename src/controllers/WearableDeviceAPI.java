@@ -24,10 +24,15 @@ public class WearableDeviceAPI implements ISerializer {
 
     private List<WearableDevice> wearableList;
 
-    private File file;
+    private String fileName;
 
-    public WearableDeviceAPI() {
+    /**
+     * Constructor
+     * @param fileName takes a filename string of where to store the data in xml format
+     */
+    public WearableDeviceAPI(String fileName) {
         wearableList = new ArrayList<>();
+        this.fileName = fileName;
     }
 
     /**
@@ -106,6 +111,11 @@ public class WearableDeviceAPI implements ISerializer {
     //------------------------------------------------------------------------------------------
     // List Methods
     //------------------------------------------------------------------------------------------
+
+    /**
+     * Lists all devices
+     * @return toString of each device
+     */
     public String listAllWearableDevices() {
         String str = "";
 
@@ -120,6 +130,10 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    /**
+     * Lists all smart bands. Loops through each wearable device in wearableList, checks if it is a smart band and adds it to the string
+     * @return toString of each device, or 'no smart bands'
+     */
     public String listAllSmartBands() {
         String str = "";
 
@@ -136,6 +150,10 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    /**
+     * Lists all smartwatches. Loops through each wearable device in wearableList, checks if it is a smartwatches and adds it to the string
+     * @return toString of each device, or no 'smart watches'
+     */
     public String listAllSmartWatches() {
         String str = "";
 
@@ -152,6 +170,11 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+
+    /**
+     * Lists all devices by chosen manufacturer  *******EXTRA CREDIT********
+     * @return toString of each device by passed in manufacturer
+     */
     public String listAllWearableDevicesByChosenManufacturer(String chosenManufacturer) {
         if (ManufacturerNameUtility.isValidMenuName(chosenManufacturer)) {
             String str = "";
@@ -168,16 +191,9 @@ public class WearableDeviceAPI implements ISerializer {
     // TODO update this java doc
 
     /**
-     * This method builds and returns a String containing all the products in the ArrayList
-     * that are more expensive that a specific amount (passed as a parameter).
-     * <p>
-     * For each product added to the String, the associated index number is included.
-     * If no products are stored in the ArrayList, the returned String indicates this.
-     *
-     * @param price The value used to filter for products costing more than it.
-     * @return A String containing all the products in the ArrayList more expensive than the parameter value
-     * or "No Products are more expensive than: ", if none are more expensive.  If no products are
-     * in the ArrayList, the returned String contains "No products in store".
+     * Lists all wearable devices above passed in price. Loops through the list and checks if the current iterated object is larger than the price passed in. Add it to the string if true.
+     * @param price double price to list devices above
+     * @return string of devices above the price
      */
     public String listAllWearableDeviceAbovePrice(double price) {
         String str = "";
@@ -192,7 +208,11 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
-
+    /**
+     * Lists all wearable devices below passed in price. Loops through the list and checks if the current iterated object is larger than the price passed in. Add it to the string if true.
+     * @param price double price to list devices below
+     * @return string of devices below the price
+     */
     public String listAllWearableDeviceBelowPrice(double price) {
         String str = "";
         for (int i = 0; i < wearableList.size(); i++) {
@@ -211,6 +231,7 @@ public class WearableDeviceAPI implements ISerializer {
 //------------------------------------------------------------------------------------------
 
     /**
+     * Gets device by index with validation
      * @param indexOfObjToReturn Index of the object to get
      * @return returns the WearableDevice obj
      */
@@ -221,7 +242,11 @@ public class WearableDeviceAPI implements ISerializer {
         return null;
     }
 
-    // todo double check this but should be fine
+    /**
+     * Gets device by id with validation
+     * @param id id of the object to get
+     * @return returns the WearableDevice obj
+     */
     public WearableDevice getWearableDeviceByID(String id) {
         if (isValidId(id)) {
             for (WearableDevice objToGetByID : wearableList) {
@@ -233,8 +258,16 @@ public class WearableDeviceAPI implements ISerializer {
         return null;
     }
 
-    // Update methods
+//------------------------------------------------------------------------------------------
+// Update methods
+//------------------------------------------------------------------------------------------
 
+    /**
+     * Updates Smart Watch by index
+     * @param indexToUpdate Pass in the index of the wearableList to update
+     * @param detailsToUpdate A SmartWatch type object with the details to update
+     * @return true if the update is object was found and updated, false if not
+     */
     public boolean updateSmartWatchByIndex(int indexToUpdate, SmartWatch detailsToUpdate) {
         //find the object by the index number
         WearableDevice getDevice = getWearableDeviceByIndex(indexToUpdate);
@@ -255,6 +288,13 @@ public class WearableDeviceAPI implements ISerializer {
         //if the object was not found, return false, indicating that the update was not successful
         return false;
     }
+
+    /**
+     * Updates Smart Watch by id
+     * @param id Pass in the id of the wearableList to update
+     * @param detailsToUpdate A SmartWatch type object with the details to update
+     * @return true if the update is object was found and updated, false if not
+     */
 
     public boolean updateSmartWatchByID(String id, SmartWatch detailsToUpdate) {
         //find the object by the index number
@@ -277,6 +317,12 @@ public class WearableDeviceAPI implements ISerializer {
         return false;
     }
 
+    /**
+     * Updates Smart Band
+     * @param id Pass in the index of the wearableList to update
+     * @param detailsToUpdate A SmartBand type object with the details to update
+     * @return true if the update is object was found and updated, false if not
+     */
     public boolean updateSmartBandByID(String id, SmartBand detailsToUpdate) {
         //find the object by the index number
         WearableDevice getDevice = getWearableDeviceByID(id);
@@ -297,6 +343,13 @@ public class WearableDeviceAPI implements ISerializer {
         //if the object was not found, return false, indicating that the update was not successful
         return false;
     }
+
+    /**
+     * Updates Smart Band
+     * @param indexToUpdate Pass in the index of the wearableList to update
+     * @param detailsToUpdate A SmartBand type object with the details to update
+     * @return true if the update is object was found and updated, false if not
+     */
 
     public boolean updateSmartBandByIndex(int indexToUpdate, SmartBand detailsToUpdate) {
         //find the object by the index number
@@ -320,11 +373,12 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
 
-    //TODO - delete methods
+//------------------------------------------------------------------------------------------
+// Update methods
+//------------------------------------------------------------------------------------------
 
     /**
      * Deletes WearableDevice object by index
-     *
      * @param indexToDelete The index to delete
      * @return if the index is valid, returns the object that was deleted
      */
@@ -338,7 +392,6 @@ public class WearableDeviceAPI implements ISerializer {
 
     /**
      * Deletes WearableDevice object by ID.
-     *
      * @param id The id of the object to delete
      * @return if the id is valid, returns the object that was deleted. Or returns null
      */
@@ -366,7 +419,7 @@ public class WearableDeviceAPI implements ISerializer {
     /**
      * Checks if id does/does not exist in collection.
      * @param id id of WearableDevice object in wearableList
-     * @return False if it already exists in the array (can't have duplicates of IDs), true if it does not exist yet.
+     * @return True if it already exists in the array (can't have duplicates of IDs), false if it does not exist yet.
      */
     public boolean isValidId(String id) {
         for (WearableDevice techDev : wearableList) {
@@ -386,8 +439,13 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
 
-    //TODO - sort methods
-    // todo check this
+    //------------------------------------------------------------------------------------------
+    // Sort methods
+    //------------------------------------------------------------------------------------------
+
+    /**
+     * Uses selection sort algorithm to sort the wearable device list in descending order.
+     */
     public void sortByPriceDescending() {
         for (int i = wearableList.size() - 1; i >= 0; i--) {
             int lowestIndex = 0;
@@ -400,6 +458,9 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    /**
+     * Uses selection sort algorithm to sort the wearable device list in ascending order.
+     */
     public void sortByPriceAscending() {
         for (int i = wearableList.size() - 1; i >= 0; i--) {
             int highestIndex = 0;
@@ -412,6 +473,10 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
+    /**
+     * Overloaded function for selection sort algorithm to sort the wearable device list in ascending order.
+     * @param listToSort takes in a different list to sort if needed. For example in my topFiveMostExpensive method, I nondestructively sort the wearableList to get the five most expensive
+     */
     public void sortByPriceAscending(List<WearableDevice> listToSort) {
         for (int i = listToSort.size() - 1; i >= 0; i--) {
             int highestIndex = 0;
@@ -425,7 +490,7 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
     /**
-     * Selection sort algorithm for  sorting the arraylist of devices by model name ascending.
+     * Selection sort algorithm for sorting the arraylist of devices by model name ascending.
      */
     public void sortProductsByModelNameAscending()
     {
@@ -442,7 +507,12 @@ public class WearableDeviceAPI implements ISerializer {
         }
     }
 
-    // todo check this warning
+    /**
+     * Swaps positions of objects to enable sorting
+     * @param devices List of devices
+     * @param i to be set as the original position
+     * @param j To be the integer to swap - can be set as the 'highestIndex' or 'lowestIndex' for example from the result of the selection sort.
+     */
     private void swapWearableDevice(List<WearableDevice> devices, int i, int j) {
         WearableDevice intOriginal = devices.get(i);
         WearableDevice intToSwap = devices.get(j);
@@ -452,13 +522,22 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
 
-    //TODO Top 5 methods
+    //------------------------------------------------------------------------------------------
+    // Top 5 methods
+    //------------------------------------------------------------------------------------------
 
+    /**
+     * Returns a list of the top five most expensive wearable devices.
+     * Sets up a new wearableList to sort and sorts it if the list is not already sorted with my isSortedAscending method.
+     * This is a non-destructive sort, meaning by copying the contents of wearableList to a new array list, it doesn't change the sorting of the base list, as the user may not want that.
+     * Then takes the top five from the new list and adds them to the listOfTopFive
+     * @return list of top five
+     */
     public List<WearableDevice> topFiveMostExpensiveWearableDevices() {
         List<WearableDevice> listOfTopFive = new ArrayList<>();
-        List<WearableDevice> newWearableListToSort = new ArrayList<>();
+        List<WearableDevice> newWearableListToSort;
+        newWearableListToSort = wearableList;
         if (!isSortedAscending(wearableList)) {
-            newWearableListToSort = wearableList;
             sortByPriceAscending(newWearableListToSort);
         }
         for (int i = newWearableListToSort.size()-1; i >= newWearableListToSort.size() - 5; i--) {
@@ -467,6 +546,11 @@ public class WearableDeviceAPI implements ISerializer {
         return listOfTopFive;
     }
 
+    /**
+     * Checks if the list is sorted in ascending order
+     * @param deviceList takes in a List of type WearableDevice
+     * @return true/false if the list is sorted or not.
+     */
     public boolean isSortedAscending(List<WearableDevice> deviceList){
         for(int i=0; i< deviceList.size()-1; i++) {
             //in a sorted array current number should be
@@ -487,18 +571,9 @@ public class WearableDeviceAPI implements ISerializer {
      * @param paramToSearch The string to search by
      * @return products whose product name contains the search string
      */
-
-//   Curious attempt to make below code DRY
-//    private String simplifyDeviceAndSearchString(WearableDevice deviceString ,String searchQuery) {
-//        return deviceString.toUpperCase().contains(searchQuery.toUpperCase());
-//    }
-
-
-    // Might need to make these separate functions.
     public String searchByDeviceParam(String paramToSearch, String searchQuery) {
         boolean queryToCheck = false;
         String matchingDevices = "";
-//        System.out.println(paramToSearch);
         for (WearableDevice device : wearableList) {
             switch (paramToSearch) {
                 case "size":
@@ -529,7 +604,9 @@ public class WearableDeviceAPI implements ISerializer {
     }
 
 
-    // TODO Persistence methods
+//------------------------------------------------------------------------------------------
+// Persistence methods
+//------------------------------------------------------------------------------------------
 
     /**
      * The save method uses the XStream component to write all the objects in the posts ArrayList
@@ -572,7 +649,7 @@ public class WearableDeviceAPI implements ISerializer {
      * @return a str with the file name
      */
     public String fileName() {
-        return "wearableDevices.xml";
+        return fileName;
     }
 
 
